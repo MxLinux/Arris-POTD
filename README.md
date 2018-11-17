@@ -3,9 +3,13 @@ This is a Windows-specific project that I'm using at work to log into ARRIS data
 
 ## Required Imports
 `datetime` for dynamic loading of system tray icon based on date.
+
 `keyboard` for registering 
+
 [`infi.systray`](https://github.com/Infinidat/infi.systray) for System Tray icon.
+
 [`pyperclip`](https://github.com/asweigart/pyperclip) for copying text to clipboard.
+
 [`zroya`](https://github.com/malja/zroya) for creating toast notifications.
 
 ## Password-Of-The-Day File Format
