@@ -4,9 +4,9 @@ This is a Windows-specific project that I'm using at work to log into ARRIS data
 ## Required Imports
 `datetime` for dynamic loading of system tray icon based on date.
 
-`keyboard` for registering 
-
 [`infi.systray`](https://github.com/Infinidat/infi.systray) for System Tray icon.
+
+[`keyboard`](https://github.com/boppreh/keyboard) for registering keyboard shortcuts.
 
 [`pyperclip`](https://github.com/asweigart/pyperclip) for copying text to clipboard.
 
