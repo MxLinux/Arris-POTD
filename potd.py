@@ -5,8 +5,11 @@ except ImportError:
     exit()
 
 import datetime as d
-import keyboard as k
-
+try:
+    import keyboard as k
+except ImportError:
+    print("Please install keyboard library. Exiting.")
+    exit()
 try:
     import pyperclip as p
 except ImportError:
