@@ -31,7 +31,6 @@ year = year[-2:]
 date = month + "/" + day + "/" + year
 icon = "icons/" + day + ".ico"
 icon_short = day + ".ico"
-tray = s(icon, "POTD Copy")
 k.add_hotkey('left alt+shift+d', lambda:  copy_potd())
 z.init(" ", " ", " ", " ", " ")
 template = z.Template(z.TemplateType.ImageAndText4)
@@ -43,7 +42,7 @@ except FileNotFoundError:
     print("Image: " + icon + " not found. Exiting.")
     exit()
 
-def copy_potd():
+def copy_potd(*SysTrayIcon):
     try:
         with open(fname) as search:
             total = sum(1 for lines in open(fname))
@@ -90,4 +89,7 @@ def copy_potd():
         template.setSecondLine("Unable to open " + fname + " for reading")
         z.show(template)
         exit()
+
+menu_options = (("ARRIS POTD", None, copy_potd),)
+tray = s(icon, "POTD Copy", menu_options)
 tray.start()
