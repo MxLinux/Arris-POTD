@@ -10,7 +10,7 @@ This is a Windows-specific project that I'm using at work to log into ARRIS data
 
 [`pyperclip`](https://github.com/asweigart/pyperclip) for copying text to clipboard.
 
-[`zroya`](https://github.com/malja/zroya) for creating toast notifications.
+[`win10toast`](https://github.com/jithurjacob/Windows-10-Toast-Notifications) for creating toast notifications.
 
 ## Password-Of-The-Day File Format
 This script assumes the lines in the text file to be formatted as follows

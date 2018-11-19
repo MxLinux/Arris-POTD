@@ -3,6 +3,11 @@ try:
 except ImportError:
     print("Please install infi.systray library. Exiting.")
     exit()
+try:
+    from win10toast import ToastNotifier
+except ImportError:
+    print("Please install win10toast. Exiting")
+    exit()
 
 import datetime as d
 
@@ -16,13 +21,9 @@ try:
 except ImportError:
     print("Please install pyperclip library. Exiting.")
     exit()
-try:
-    import zroya as z
-except ImportError:
-    print("Please install zroya library. Exiting.")
-    exit()
-
-fname = "potd.txt" # Filename for testing
+    
+# Get raw string to support UNC paths
+fname = r"potd.txt" 
 now = d.datetime.now()
 month = now.strftime("%m")
 day = now.strftime("%d")
@@ -32,15 +33,7 @@ date = month + "/" + day + "/" + year
 icon = "icons/" + day + ".ico"
 icon_short = day + ".ico"
 k.add_hotkey('left alt+shift+d', lambda:  copy_potd())
-z.init(" ", " ", " ", " ", " ")
-template = z.Template(z.TemplateType.ImageAndText4)
-
-try:
-    template.setImage(icon)
-    print("Icon should show as " + icon_short + " for today's date.")
-except FileNotFoundError:
-    print("Image: " + icon + " not found. Exiting.")
-    exit()
+t = ToastNotifier()
 
 def copy_potd(*SysTrayIcon):
     try:
@@ -55,17 +48,13 @@ def copy_potd(*SysTrayIcon):
                         count += 1
                     else:
                         print("Reached EOF at line " + str(count))
-                        template.setFirstLine("File search error:")
-                        template.setSecondLine("Expected line length 20")
-                        template.setThirdLine("Found line length " + str(len(line)) + " on line: " + str(count))
-                        z.show(template)
+                        t.show_toast("File search error:", "Expected line length of 20 characters,\nFound length of " + str(len(line)) + " on line " + str(line), icon_path=icon, duration=5)
                 else:
                     if date == line[0:8]:
                         potd = line[-10:]
                         p.copy(potd)
                         print("Password '" + potd + "' found on line " + str(count))
-                        template.setFirstLine("Password " + "'" + potd + "' copied!")
-                        z.show(template)
+                        t.show_toast(potd, "Password-of-the-Day copied to clipboard.", icon_path=icon, duration=5)
                         break
                     else:
                         if count < total:
@@ -76,18 +65,14 @@ def copy_potd(*SysTrayIcon):
                             if count == total:
                                 print("Line " + str(count) + " of " + str(total) + " for date '" + date + "' does not match current date. Skipping")
                                 print("Reached EOF at line " + str(count))
+                                t.show_toast("File search error:", "No line of appropriate length\nmatching today's date " + date, icon_path=icon, duration=5)
+                                break
                             else: 
                                 count += 1
-                            template.setFirstLine("File search error:")
-                            template.setSecondLine("No line of appropriate length")
-                            template.setThirdLine("matching today's date " + date)
-                            z.show(template)
-                            break
+                            
     except FileNotFoundError:
         print("Unable to open file " + fname + " for reading. Exiting.")
-        template.setFirstLine("File not found error:")
-        template.setSecondLine("Unable to open " + fname + " for reading")
-        z.show(template)
+        t.show_toast("File not found error:", "Unable to open " + fname + " for reading", icon_path=icon, duration=5)
         exit()
 
 menu_options = (("ARRIS POTD", None, copy_potd),)
