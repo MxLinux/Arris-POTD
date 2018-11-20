@@ -42,34 +42,42 @@ def copy_potd(*SysTrayIcon):
             count = 1
             for line in search:
                 line = line.rstrip()
-                if len(line) < 20 or len(line) > 20:
-                    print("Line " + str(count) + " of " + str(total) + ", length " + str(len(line)) + ", did not match expected length of 20. Skipping.")
+                if line[0].isdigit():
+                    if len(line) < 20 or len(line) > 20:
+                        print("Line " + str(count) + " of " + str(total) + ", length " + str(len(line)) + ", did not match expected length of 20. Skipping.")
+                        if count < total:
+                            count += 1
+                        else:
+                            print("Reached EOF at line " + str(count))
+                            t.show_toast("File search error:", "Expected line length of 20 characters,\nFound length of " + str(len(line)) + " on line " + str(line), icon_path=icon, duration=5)
+                    else:
+                        if date == line[0:8]:
+                            potd = line[-10:]
+                            p.copy(potd)
+                            print("Password '" + potd + "' found on line " + str(count))
+                            t.show_toast(potd, "Password-of-the-Day copied to clipboard.", icon_path=icon, duration=5)
+                            break
+                        else:
+                            if count < total:
+                                print("Line " + str(count) + " of " + str(total) +  " for date '" + line[0:8] + "' does not match current date. Skipping.")
+                                count += 1
+                                pass
+                            else:
+                                if count == total:
+                                    print("Line " + str(count) + " of " + str(total) + " for date '" + date + "' does not match current date. Skipping")
+                                    print("Reached EOF at line " + str(count))
+                                    t.show_toast("File search error:", "No line of appropriate length\nmatching today's date " + date, icon_path=icon, duration=5)
+                                    break
+                                else: 
+                                    count += 1
+                else:
                     if count < total:
                         count += 1
+                        pass
                     else:
-                        print("Reached EOF at line " + str(count))
-                        t.show_toast("File search error:", "Expected line length of 20 characters,\nFound length of " + str(len(line)) + " on line " + str(line), icon_path=icon, duration=5)
-                else:
-                    if date == line[0:8]:
-                        potd = line[-10:]
-                        p.copy(potd)
-                        print("Password '" + potd + "' found on line " + str(count))
-                        t.show_toast(potd, "Password-of-the-Day copied to clipboard.", icon_path=icon, duration=5)
-                        break
-                    else:
-                        if count < total:
-                            print("Line " + str(count) + " of " + str(total) +  " for date '" + line[0:8] + "' does not match current date. Skipping.")
-                            count += 1
-                            pass
-                        else:
-                            if count == total:
-                                print("Line " + str(count) + " of " + str(total) + " for date '" + date + "' does not match current date. Skipping")
-                                print("Reached EOF at line " + str(count))
-                                t.show_toast("File search error:", "No line of appropriate length\nmatching today's date " + date, icon_path=icon, duration=5)
-                                break
-                            else: 
-                                count += 1
-                            
+                        print("No appropriately formatted lines found.")
+                        t.show_toast("File search error:", "No appropriately formatted lines found.", icon_path=icon, duration=5)
+
     except FileNotFoundError:
         print("Unable to open file " + fname + " for reading. Exiting.")
         t.show_toast("File not found error:", "Unable to open " + fname + " for reading", icon_path=icon, duration=5)
