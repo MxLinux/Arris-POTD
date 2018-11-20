@@ -72,6 +72,7 @@ def copy_potd(*SysTrayIcon):
                                     count += 1
                 else:
                     if count < total:
+                        print("Line " + str(count) + " of " + str(total) + " is not of valid format. Skipping.")
                         count += 1
                         pass
                     else:
